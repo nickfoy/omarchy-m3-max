@@ -35,3 +35,7 @@ The owner-approved kernel/headers candidate is now installed. Package hooks rege
 | HDMI, HDR/10-bit, external DDC brightness | The cited J514M reports leave HDMI untested and report missing HDR/10-bit/DDC support. | No qualified fix identified in this review. External monitor controls remain the practical brightness route. |
 
 Review date: 2026-11-14. Upstream status can change. Previously merged GPU/kernel/loader/Mesa enablement is already represented in the baseline; older stacked PRs are not additional fixes to apply wholesale.
+
+## First candidate boot
+
+The candidate booted as `7.2.11-16-1.2-ARCH`. GPU verification passed with the Apple M3 Max renderer, and the external ultrawide ran at 3840x1080@59.968. The new `apple-panel-bl` backlight device exposes a maximum of 500. All five sleep targets remain masked. The lid was closed during this check: visible internal-panel dimming, brightness keys and actual presentation frame rate remain unverified. No baseline promotion has occurred.

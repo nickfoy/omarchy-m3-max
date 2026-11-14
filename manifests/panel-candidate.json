@@ -1,5 +1,5 @@
 {
-  "status": "installed-awaiting-reboot-validation",
+  "status": "booted-partial-runtime-validation",
   "upstream_pr": "https://github.com/omacom/linux-aurora/pull/457",
   "upstream_commits": [
     "0c6c113ac69cad1d233d7c8a0b545f1b699bbaea",
@@ -39,5 +39,18 @@
     "sleep_targets_remain_masked": true,
     "running_kernel_before_reboot": "7.2.11-16-1.1-ARCH",
     "baseline_promoted": false
+  },
+  "runtime": {
+    "kernel_release": "7.2.11-16-1.2-ARCH",
+    "gpu_verifier": "PASS",
+    "display_verifier": "PASS",
+    "external_mode": "3840x1080@59.968",
+    "lid_closed": true,
+    "backlight_device": "apple-panel-bl",
+    "backlight_max": 500,
+    "visible_dimming": "not yet tested",
+    "brightness_keys": "not yet tested",
+    "internal_presentation_fps": "not yet measured",
+    "sleep_targets": "all five masked"
   }
 }
