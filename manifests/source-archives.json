@@ -1,0 +1,11 @@
+{
+  "note": "Hashes of retained original upstream archive inputs, not kernel binaries or a promise of bit-identical rebuilt packages. Git source pins and build/sources.lock.json remain authoritative.",
+  "kernel": {
+    "upstream_commit": "bed544bdf93a496ebf70ba180923bab12b6e01cf",
+    "archive_sha256": "6b9b010ce3d4f1a3ccaab8467db21148abf976429f30240c717db94192dca4ac"
+  },
+  "m1n1": {
+    "upstream_commit": "ba130ffbeeadaa35215ed88b07ebcee3199d0be7",
+    "archive_sha256": "90c41b41555d39ef15cb37dbd4a74d816aefba6d06f599f74073393462132d5b"
+  }
+}
