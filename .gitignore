@@ -1,0 +1,27 @@
+# Private state and credentials never belong here
+.local/
+private/
+baselines/
+backups/
+diagnostics/
+*.log
+*.tar
+*.tar.*
+*.pkg.*
+*.dtb
+*.img
+*.efi
+*.bin
+*.key
+*.pem
+*.p12
+*.pfx
+.env*
+.ssh/
+.aws/
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build-work/
+!.github/

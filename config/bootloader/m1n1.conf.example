@@ -1,0 +1,3 @@
+# Only for the exact reviewed J514M kernel/loader backport, after approval.
+# This does not enable missing DT nodes in an unpatched kernel.
+chosen.asahi,t6034-dispext=1

@@ -1,0 +1,3 @@
+# Sanitized shape only. Never replace a real encrypted-root command line with this.
+root=UUID=<ROOT_UUID> rw rootflags=subvol=@ rootfstype=btrfs rd.luks.name=<LUKS_UUID>=root
+# Preserve the actual owner's boot/initramfs options; inspect private baseline.

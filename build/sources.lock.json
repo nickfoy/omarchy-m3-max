@@ -1,0 +1,86 @@
+{
+  "linux-aurora": {
+    "upstream_source_commit": "bed544bdf93a496ebf70ba180923bab12b6e01cf",
+    "upstream_source_url": "https://github.com/omacom/linux-aurora",
+    "recipe_commit": "0d01c62212a3d5950647cbd4a779461288639f73",
+    "files": {
+      "PKGBUILD": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/0d01c62212a3d5950647cbd4a779461288639f73/pkgbuilds/linux-aurora/PKGBUILD",
+        "sha256": "5721a91c935d094e06b81aca0b64ab9d819afbb44683ac1d39080311bea57f8d",
+        "mode": "644"
+      },
+      "config": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/0d01c62212a3d5950647cbd4a779461288639f73/pkgbuilds/linux-aurora/config",
+        "sha256": "98f76a885d81711013aad47e2ee13f000923191e43321738ec8f381690bf5160",
+        "mode": "644"
+      },
+      "configure.sh": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/0d01c62212a3d5950647cbd4a779461288639f73/pkgbuilds/linux-aurora/configure.sh",
+        "sha256": "b95c0f0ddf106f3861e0e62a746af6a881fb8e0f356a892961f9e86062877400",
+        "mode": "644"
+      },
+      "rust-toolchain.toml": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/0d01c62212a3d5950647cbd4a779461288639f73/pkgbuilds/linux-aurora/rust-toolchain.toml",
+        "sha256": "443a9c4613172ea352f49b114818a1d75ab048ec4bd2d75b388a7ab3a8a1f046",
+        "mode": "644"
+      },
+      "bindgen-kernel.py": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/0d01c62212a3d5950647cbd4a779461288639f73/pkgbuilds/linux-aurora/bindgen-kernel.py",
+        "sha256": "84a03d5fea19cae243c89f50c1736c639622d25d4d1de8d7d53ebd8f603c0f62",
+        "mode": "755"
+      },
+      "validate-config.py": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/0d01c62212a3d5950647cbd4a779461288639f73/pkgbuilds/linux-aurora/validate-config.py",
+        "sha256": "aca7420a18139474da62a81c77fc6e5c3f25001f872b6e11e18605cd892aa4c3",
+        "mode": "644"
+      }
+    },
+    "source_patch": "linux-aurora-j514m.patch",
+    "source_patch_sha256": "1c8354df0b115d71f999425a27525f16c82a0635dc9fcce378fbd68cd5c5ac33",
+    "recipe_patch": "linux-aurora-recipe.patch",
+    "recipe_patch_sha256": "8411f409e10353e7195527c2eecb4457bfe82f938951e0602fd1a864c1be51ca",
+    "prepared_pkgbuild_sha256": "f03d4707394172ff289c1ffad09465bfb4bf8742f098fd8538c82f5faf9481b3"
+  },
+  "m1n1-aurora": {
+    "upstream_source_commit": "ba130ffbeeadaa35215ed88b07ebcee3199d0be7",
+    "upstream_source_url": "https://github.com/omacom/m1n1",
+    "recipe_commit": "00b66b0372fb8c5c216ec66400cdfdf314595ae4",
+    "files": {
+      "PKGBUILD": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/00b66b0372fb8c5c216ec66400cdfdf314595ae4/pkgbuilds/m1n1-aurora/PKGBUILD",
+        "sha256": "71b2e45f8f6da8e643a2a49b03820a4a0684568016701885203c8e91e2a82d2a",
+        "mode": "644"
+      },
+      "build-qualification.json": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/00b66b0372fb8c5c216ec66400cdfdf314595ae4/pkgbuilds/m1n1-aurora/build-qualification.json",
+        "sha256": "64ef0a7269a02fbfb1b3a8799421e83628f6d10a4e3cddceb053d29d2e54abfc",
+        "mode": "644"
+      },
+      "validate-qualification.py": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/00b66b0372fb8c5c216ec66400cdfdf314595ae4/pkgbuilds/m1n1-aurora/validate-qualification.py",
+        "sha256": "43578b83ebea180319b64c9b63377dab6148e997e6f75fd4abcb325484f7ca95",
+        "mode": "644"
+      },
+      "bootlogo_48.bin": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/00b66b0372fb8c5c216ec66400cdfdf314595ae4/pkgbuilds/m1n1-aurora/bootlogo_48.bin",
+        "sha256": "6668050653645711ad7523fe2abeb4cbe85a92c875f3eec754b6db23cea2191c",
+        "mode": "644"
+      },
+      "bootlogo_128.bin": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/00b66b0372fb8c5c216ec66400cdfdf314595ae4/pkgbuilds/m1n1-aurora/bootlogo_128.bin",
+        "sha256": "b19cb017645c7a9068ea0be9b6bb394131d7ca11b28093cf6caa1ffca74b0a4e",
+        "mode": "644"
+      },
+      "bootlogo_256.bin": {
+        "url": "https://raw.githubusercontent.com/omacom/omarchy-pkgs/00b66b0372fb8c5c216ec66400cdfdf314595ae4/pkgbuilds/m1n1-aurora/bootlogo_256.bin",
+        "sha256": "9c659b392aacfa31c62c638003d2257abfdbe17919b5c90cde4c4e62f87addab",
+        "mode": "644"
+      }
+    },
+    "source_patch": "m1n1-aurora-j514m.patch",
+    "source_patch_sha256": "c6a4a71dbdd4a7e378ace2f83ea1962fa8078e369352cd5c913142e6dcecccd9",
+    "recipe_patch": "m1n1-aurora-recipe.patch",
+    "recipe_patch_sha256": "ac3c07627557074594e25eb05f005fbe280dba8b4db6dd6a0b667d01635fcaeb",
+    "prepared_pkgbuild_sha256": "da4631deb150994a584ea00a68a260cc1e2967fe2619545833b58aa71bc90bc8"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "groups": {
+    "boot": {
+      "reason": "Kernel, device trees, Stage 2 and next-boot image coupling",
+      "packages": [
+        "linux-aurora",
+        "linux-aurora-headers",
+        "linux-asahi",
+        "linux-asahi-headers",
+        "m1n1",
+        "m1n1-aurora",
+        "aura",
+        "uboot-asahi",
+        "uboot-aurora",
+        "limine",
+        "mkinitcpio",
+        "asahi-scripts",
+        "omarchy-mac-boot",
+        "asahi-fwextract",
+        "linux-firmware",
+        "omarchy-mac",
+        "omarchy-aurora-firmware"
+      ]
+    },
+    "display": {
+      "reason": "Apple GPU and external display runtime compatibility",
+      "packages": [
+        "mesa",
+        "mesa-asahi",
+        "libdrm",
+        "hyprland",
+        "aquamarine",
+        "hyprutils",
+        "wayland",
+        "xorg-xwayland",
+        "mesa-aurora",
+        "vulkan-aurora",
+        "libglvnd",
+        "vulkan-icd-loader",
+        "vulkan-mesa-implicit-layers",
+        "mesa-implicit-layers",
+        "hyprgraphics",
+        "hyprlang",
+        "hyprcursor",
+        "quickshell",
+        "mesa-utils"
+      ]
+    },
+    "policy": {
+      "reason": "Sleep policy, platform integration and transaction machinery",
+      "packages": [
+        "systemd",
+        "systemd-libs",
+        "pacman",
+        "pacman-contrib",
+        "omarchy",
+        "omarchy-dev",
+        "omarchy-platform",
+        "omarchy-keyring",
+        "archlinux-keyring",
+        "archlinuxarm-keyring",
+        "asahi-alarm-keyring"
+      ]
+    },
+    "audio": {
+      "reason": "Apple platform audio and speaker safety integration",
+      "packages": [
+        "alsa-ucm-conf-aurora",
+        "aurora-audio",
+        "speakersafetyd"
+      ]
+    }
+  },
+  "protected_paths": [
+    "boot/",
+    "etc/m1n1.conf",
+    "etc/default/limine",
+    "etc/default/update-m1n1",
+    "etc/mkinitcpio",
+    "etc/systemd/logind",
+    "etc/systemd/sleep",
+    "etc/pacman",
+    "usr/share/libalpm/",
+    "usr/lib/modules/",
+    "usr/lib/firmware/",
+    "usr/lib/asahi-boot/",
+    "usr/lib/omarchy/",
+    "usr/bin/omarchy-update",
+    "usr/lib/libEGL",
+    "usr/lib/libGL",
+    "usr/lib/libvulkan",
+    "usr/share/vulkan/",
+    "usr/share/glvnd/",
+    "usr/lib/dri/"
+  ]
+}

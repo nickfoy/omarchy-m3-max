@@ -1,0 +1,8 @@
+{
+  "source_commit": "ba130ffbeeadaa35215ed88b07ebcee3199d0be7",
+  "hardware_tested": false,
+  "stage1_auto_enrollment": false,
+  "promotion_gate": "before rc/stable promotion: native build, cold-boot upgrade pairs on M1/M2/M3/Neo, matched Neo boot, repair and upgrade qualification",
+  "local_purpose": "J514M external display opt-in, m1n1 PR29 on Aurora23-2",
+  "local_patch_sha256": "c6a4a71dbdd4a7e378ace2f83ea1962fa8078e369352cd5c913142e6dcecccd9"
+}

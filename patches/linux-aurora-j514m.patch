@@ -1,0 +1,650 @@
+diff --git a/arch/arm64/boot/dts/apple/t6034-dcpext.dtsi b/arch/arm64/boot/dts/apple/t6034-dcpext.dtsi
+new file mode 100644
+index 000000000..dec5e088f
+--- /dev/null
++++ b/arch/arm64/boot/dts/apple/t6034-dcpext.dtsi
+@@ -0,0 +1,203 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++/*
++ * T6034 external display processor dcpext0.
++ *
++ * The J516M ADT places dcpext0 exactly 0x8000_0000 below the panel's DCP
++ * block: coprocessor 0x3_06c0_0000, mailbox 0x3_06c0_8000, firmware DART
++ * 0x3_0530_c000 and display DART 0x3_0530_4000 (both on interrupt 1047),
++ * display pipe 0x3_0400_0000. Its preloaded 14.7 firmware is the panel's
++ * image (F493F03E-...), and its nub has the T6030 dcpext segment layout, so
++ * it runs on the T6030 dcpext handoff protocol: compatible falls back to
++ * apple,t6030-dcpext.
++ *
++ * Power: as for the panel, dispext0_fe is the child of dispext0_cpu on
++ * T6031/T6034, so the processor holds the front end (and with it all three
++ * states); its DART and mailbox hold dispext0_cpu, which is what m1n1's
++ * display DART handoff and the display gate check.
++ *
++ * Every node stays disabled. m1n1 describes the firmware memory and the
++ * display DART only with chosen asahi,t6034-dcpext=1 / asahi,t6034-dispext=1,
++ * and the display gate enables the nodes only when those markers are there.
++ */
++
++/ {
++	aliases {
++		dcpext0 = &dcpext;
++	};
++};
++
++&soc {
++	dcpext_dart: iommu@30530c000 {
++		compatible = "apple,t6031-dart", "apple,t8110-dart";
++		reg = <0x3 0x0530c000 0x0 0x4000>;
++		interrupt-parent = <&aic>;
++		interrupts = <AIC_IRQ 0 1047 IRQ_TYPE_LEVEL_HIGH>;
++		#iommu-cells = <1>;
++		apple,dma-range = <0x100 0x0 0x10 0x0>;
++		power-domains = <&ps_dispext0_cpu>;
++		status = "disabled";
++	};
++
++	dcpext_mbox: mailbox@306c08000 {
++		compatible = "apple,t6031-asc-mailbox", "apple,asc-mailbox-v4";
++		reg = <0x3 0x06c08000 0x0 0x4000>;
++		interrupt-parent = <&aic>;
++		/* ADT order 1069 1068 1071 1070, as the panel's 1030 1029 1032 1031 */
++		interrupts = <AIC_IRQ 0 1068 IRQ_TYPE_LEVEL_HIGH>,
++			     <AIC_IRQ 0 1069 IRQ_TYPE_LEVEL_HIGH>,
++			     <AIC_IRQ 0 1070 IRQ_TYPE_LEVEL_HIGH>,
++			     <AIC_IRQ 0 1071 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "send-empty", "send-not-empty",
++				  "recv-empty", "recv-not-empty";
++		#mbox-cells = <0>;
++		power-domains = <&ps_dispext0_cpu>;
++		resets = <&ps_dispext0_cpu>;
++		status = "disabled";
++	};
++
++	/* ADT atcN-dpxbar (compatible atc-dpxbar,t602x), one per Type-C port. */
++	atcphy0_xbar: mux@70304c000 {
++		compatible = "apple,t6031-display-crossbar",
++			     "apple,t6020-display-crossbar";
++		reg = <0x7 0x0304c000 0x0 0x4000>;
++		#mux-control-cells = <1>;
++		power-domains = <&ps_atc0_usb>;
++	};
++
++	atcphy1_xbar: mux@b0304c000 {
++		compatible = "apple,t6031-display-crossbar",
++			     "apple,t6020-display-crossbar";
++		reg = <0xb 0x0304c000 0x0 0x4000>;
++		#mux-control-cells = <1>;
++		power-domains = <&ps_atc1_usb>;
++	};
++
++	atcphy2_xbar: mux@f0304c000 {
++		compatible = "apple,t6031-display-crossbar",
++			     "apple,t6020-display-crossbar";
++		reg = <0xf 0x0304c000 0x0 0x4000>;
++		#mux-control-cells = <1>;
++		power-domains = <&ps_atc2_usb>;
++	};
++
++	dcpext: dcp@306c00000 {
++		compatible = "apple,t6034-dcpext", "apple,t6030-dcpext",
++			     "apple,dcpext";
++		reg = <0x3 0x06c00000 0x0 0x4000>;
++		reg-names = "coproc";
++		mboxes = <&dcpext_mbox>;
++		mbox-names = "mbox";
++		iommus = <&dcpext_dart 5>;
++		power-domains = <&ps_dispext0_fe>;
++		resets = <&ps_dispext0_cpu>;
++		/*
++		 * The gate sets this too; naming it here gives the entry the
++		 * phandle the gate requires (dtc emits one only if referenced).
++		 */
++		apple,pmp-report = <&pmp_report_dispext0>;
++		phys = <&atcphy0 PHY_TYPE_DP>, <&atcphy1 PHY_TYPE_DP>,
++		       <&atcphy2 PHY_TYPE_DP>;
++		phy-names = "typec0", "typec1", "typec2";
++		mux-controls = <&atcphy0_xbar 0>, <&atcphy1_xbar 0>,
++			       <&atcphy2_xbar 0>,
++			       <&atcphy0_xbar 1>, <&atcphy0_xbar 2>,
++			       <&atcphy1_xbar 1>, <&atcphy1_xbar 2>,
++			       <&atcphy2_xbar 1>, <&atcphy2_xbar 2>;
++		mux-control-names = "typec0", "typec1", "typec2",
++				    "typec0-dpin0", "typec0-dpin1",
++				    "typec1-dpin0", "typec1-dpin1",
++				    "typec2-dpin0", "typec2-dpin1";
++		apple,connector-type = "USB-C";
++		/* display-crossbar0 upstream port: dispext0 */
++		apple,dcp-index = <1>;
++		apple,typec-dptx-phys = <0 1 2>;
++		apple,typec-mux-indices = <0 0 0>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "disabled";
++
++		/* Enabled together with the processor by the display gate. */
++		typec-routes {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			route@0 {
++				reg = <0>;
++				mode-switch;
++				status = "disabled";
++
++				port {
++					dcpext_typec0: endpoint {
++						remote-endpoint = <&typec0_dcpext>;
++					};
++				};
++			};
++
++			route@1 {
++				reg = <1>;
++				mode-switch;
++				status = "disabled";
++
++				port {
++					dcpext_typec1: endpoint {
++						remote-endpoint = <&typec1_dcpext>;
++					};
++				};
++			};
++
++			route@2 {
++				reg = <2>;
++				mode-switch;
++				status = "disabled";
++
++				port {
++					dcpext_typec2: endpoint {
++						remote-endpoint = <&typec2_dcpext>;
++					};
++				};
++			};
++		};
++	};
++};
++
++/* The driver waits for the PMP to acknowledge this request before RUN. */
++&pmp_report_dispext0 {
++	apple,always-on;
++};
++
++&typec0 {
++	ports {
++		port@3 {
++			reg = <3>;
++
++			typec0_dcpext: endpoint {
++				remote-endpoint = <&dcpext_typec0>;
++			};
++		};
++	};
++};
++
++&typec1 {
++	ports {
++		port@3 {
++			reg = <3>;
++
++			typec1_dcpext: endpoint {
++				remote-endpoint = <&dcpext_typec1>;
++			};
++		};
++	};
++};
++
++&typec2 {
++	ports {
++		port@3 {
++			reg = <3>;
++
++			typec2_dcpext: endpoint {
++				remote-endpoint = <&dcpext_typec2>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/apple/t6034-j514m.dts b/arch/arm64/boot/dts/apple/t6034-j514m.dts
+index 790319c2d..49a8e831a 100644
+--- a/arch/arm64/boot/dts/apple/t6034-j514m.dts
++++ b/arch/arm64/boot/dts/apple/t6034-j514m.dts
+@@ -12,6 +12,7 @@
+ #include "t6034.dtsi"
+ #include "t6034-dcp.dtsi"
+ #include "t603x-j514-j516.dtsi"
++#include "t6034-dcpext.dtsi"
+ 
+ / {
+ 	compatible = "apple,j514m", "apple,t6034", "apple,arm-platform";
+diff --git a/drivers/gpu/drm/apple/dcp-fabric.c b/drivers/gpu/drm/apple/dcp-fabric.c
+index 29321f803..1963cbb0c 100644
+--- a/drivers/gpu/drm/apple/dcp-fabric.c
++++ b/drivers/gpu/drm/apple/dcp-fabric.c
+@@ -211,7 +211,7 @@ bool dcp_typec_dual_stream(void)
+ bool dcp_typec_ordered_dual_stream(void)
+ {
+ 	return dcp_fabric_ordered_dual_stream(dcp_typec_dual_stream(),
+-					    of_machine_is_compatible("apple,t6030"));
++					    apple_dp_tunnel_m3_soc());
+ }
+ 
+ /*
+@@ -257,7 +257,7 @@ static int dcp_route_clock_rate(struct apple_dcp_typec_route *route,
+ {
+ 	int ret;
+ 
+-	if (of_machine_is_compatible("apple,t6030")) {
++	if (apple_dp_tunnel_m3_soc()) {
+ 		typeof(apple_atc_dp_tunnel_rate_source) *fn;
+ 
+ 		if (dcp_fabric_t6030_pclk(route->mux_index, dpin) < 0)
+@@ -902,7 +902,7 @@ static void dcp_fabric_snapshot_port(struct apple_dcp_typec_port *port,
+ 		route->core.tunnel = route->tunnel;
+ 		route->core.dpin = route->tunnel_dpin;
+ 		route->core.tunnel_clock_blocked = dcp_fabric_tunnel_clock_blocked(
+-			of_machine_is_compatible("apple,t6030"), route->mux_index);
++			apple_dp_tunnel_m3_soc(), route->mux_index);
+ 		*tail = &route->core;
+ 		tail = &route->core.next;
+ 	}
+@@ -1763,7 +1763,7 @@ int dcp_direct_crossbar_link(struct apple_dcp *dcp, bool up)
+ 	struct mux_control *xbar = NULL;
+ 	int ret;
+ 
+-	if (!of_machine_is_compatible("apple,t6030"))
++	if (!apple_dp_tunnel_m3_soc())
+ 		return 0;
+ 	guard(mutex)(&dcp->tb_lock);
+ 	route = dcp->active_typec_route;
+@@ -1805,7 +1805,7 @@ int dcp_tunnel_set_rate(struct apple_dcp *dcp, struct phy *phy, u32 unit,
+ 		return -ENODEV;
+ 	if (!dcp_fabric_callback_valid(route->tunnel_generation, dcp->tb_generation))
+ 		return -ESTALE;
+-	if (of_machine_is_compatible("apple,t6030") &&
++	if (apple_dp_tunnel_m3_soc() &&
+ 	    (unit || dcp->dptx_dfp_port != 1 + route->tunnel_dpin ||
+ 	     apple_dp_tunnel_t6030_pclk(route->mux_index,
+ 				      route->tunnel_dpin) < 0))
+@@ -1903,7 +1903,7 @@ static struct mux_control *
+ dcp_typec_tunnel_ctl(struct apple_dcp_typec_route *route, unsigned int dpin)
+ {
+ 	if (dpin > 1 ||
+-	    (dcp_fabric_tunnel_clock_blocked(of_machine_is_compatible("apple,t6030"),
++	    (dcp_fabric_tunnel_clock_blocked(apple_dp_tunnel_m3_soc(),
+ 					     route->mux_index) & BIT(dpin)))
+ 		return NULL;
+ 	if (route->dpin[dpin])
+diff --git a/drivers/gpu/drm/apple/dcp.c b/drivers/gpu/drm/apple/dcp.c
+index 8cb040d16..6cfe67892 100644
+--- a/drivers/gpu/drm/apple/dcp.c
++++ b/drivers/gpu/drm/apple/dcp.c
+@@ -1382,6 +1382,66 @@ static int dcp_external_start_locked(struct apple_dcp *dcp)
+  * that DART, and stream 0 among the display subsystem's iommus, so that
+  * framebuffers are mapped for it as for the panel.
+  */
++/* Display subsystems an external processor on the T6030 handoff can join. */
++static const struct of_device_id dcp_ext_display_ids[] = {
++	{ .compatible = "apple,t6030-display-subsystem" },
++	/* T6034: dcpext0 on the T6030 handoff protocol. */
++	{ .compatible = "apple,t6034-display-subsystem" },
++	{},
++};
++
++/*
++ * The external processor images the 14.7 external path speaks to: the
++ * T6030 image, and on T6034 the SoC's own image, which
++ * the panel's DCP already runs natively on the same 14.7 layouts.
++ */
++bool dcp_ext_firmware_admitted(const struct device_node *np)
++{
++	const char *uuid;
++
++	if (of_property_read_string(np, "apple,firmware-uuid", &uuid))
++		return false;
++	if (!strcmp(uuid, "DDF38191-93B3-324A-BC8F-643006F5AC82"))
++		return true;
++	return of_machine_is_compatible("apple,t6034") &&
++	       !strcmp(uuid, "F493F03E-CC40-3D89-9A08-5F259BA2B246");
++}
++
++static bool dcp_ext_domain_is(struct device_node *ps, const char *part)
++{
++	const char *label;
++	size_t len, plen = strlen(part);
++
++	if (!ps || of_property_read_string(ps, "label", &label) ||
++	    !strstarts(label, "dispext"))
++		return false;
++	len = strlen(label);
++	return len > plen && !strcmp(label + len - plen, part);
++}
++
++/*
++ * The CPU power domain of an external processor's pipe, dispext<N>_cpu,
++ * with a reference. T6030 names it first in the processor's power-domains;
++ * on T6031/T6034 the processor holds dispext<N>_fe, the
++ * child of dispext<N>_cpu there, as disp_fe is of disp_cpu.
++ */
++struct device_node *dcp_ext_cpu_domain(const struct device_node *np)
++{
++	struct device_node *ps, *parent;
++
++	ps = of_parse_phandle(np, "power-domains", 0);
++	if (dcp_ext_domain_is(ps, "_fe")) {
++		parent = of_parse_phandle(ps, "power-domains", 0);
++		of_node_put(ps);
++		ps = parent;
++	}
++	if (!dcp_ext_domain_is(ps, "_cpu")) {
++		of_node_put(ps);
++		return NULL;
++	}
++	return ps;
++}
++
+ bool dcp_t6030_ext_native(const struct device_node *np)
+ {
+ 	struct of_phandle_args dart, args;
+@@ -1403,7 +1463,7 @@ bool dcp_t6030_ext_native(const struct device_node *np)
+ 	of_node_put(piodma);
+ 	if (dart.args_count != 1 || dart.args[0] != 4 || !of_device_is_available(dart.np))
+ 		goto out;
+-	display = of_find_compatible_node(NULL, NULL, "apple,t6030-display-subsystem");
++	display = of_find_matching_node(NULL, dcp_ext_display_ids);
+ 	n = display && of_device_is_available(display) ?
+ 		of_count_phandle_with_args(display, "iommus", "#iommu-cells") : 0;
+ 	for (i = 0; i < n && !native; i++) {
+diff --git a/drivers/gpu/drm/apple/dcp.h b/drivers/gpu/drm/apple/dcp.h
+index baff04ee2..eb07e7911 100644
+--- a/drivers/gpu/drm/apple/dcp.h
++++ b/drivers/gpu/drm/apple/dcp.h
+@@ -97,6 +97,8 @@ void dcp_send_message(struct apple_dcp *dcp, u8 endpoint, u64 message);
+ 
+ int dcp_dptx_connect_oob(struct platform_device *pdev, u32 port);
+ bool dcp_t6030_ext_native(const struct device_node *np);
++bool dcp_ext_firmware_admitted(const struct device_node *np);
++struct device_node *dcp_ext_cpu_domain(const struct device_node *np);
+ void dcp_external_ready(struct apple_dcp *dcp);
+ void dcp_external_retry(struct apple_dcp *dcp, const char *why, int error,
+ 			unsigned int base_ms);
+diff --git a/drivers/gpu/drm/apple/dcpext_scanout.c b/drivers/gpu/drm/apple/dcpext_scanout.c
+index f3266931b..85cbff316 100644
+--- a/drivers/gpu/drm/apple/dcpext_scanout.c
++++ b/drivers/gpu/drm/apple/dcpext_scanout.c
+@@ -516,7 +516,7 @@ static int scanout_recheck_dart(struct device_node *dart, struct device_node *dc
+ 		return -EINVAL;
+ 	/* The display DART of this processor's own pipe shares its CPU domain. */
+ 	dart_pd = of_parse_phandle(dart, "power-domains", 0);
+-	dcp_pd = of_parse_phandle(dcp, "power-domains", 0);
++	dcp_pd = dcp_ext_cpu_domain(dcp);
+ 	of_node_put(dart_pd);
+ 	of_node_put(dcp_pd);
+ 	if (!dart_pd || dart_pd != dcp_pd)
+@@ -760,14 +760,11 @@ int dcpext_scanout_register(struct apple_dcp *dcp)
+ {
+ 	struct device_node *node;
+ 	struct dcpext_scanout *scanout;
+-	const char *uuid;
+ 	int ret;
+ 
+ 	if (!dcp->external || dcp->fw_compat != DCP_FIRMWARE_V_14_7)
+ 		return -ENODEV;
+-	if (dcpext_pageflip &&
+-	    (of_property_read_string(dcp->dev->of_node, "apple,firmware-uuid", &uuid) ||
+-	     strcmp(uuid, "DDF38191-93B3-324A-BC8F-643006F5AC82")))
++	if (dcpext_pageflip && !dcp_ext_firmware_admitted(dcp->dev->of_node))
+ 		return -EOPNOTSUPP;
+ 	node = of_get_child_by_name(dcp->dev->of_node, "scanout");
+ 	if (!scanout_node_verified(node)) {
+diff --git a/drivers/gpu/drm/apple/iomfb_v14_7.c b/drivers/gpu/drm/apple/iomfb_v14_7.c
+index 7a6c96dfa..7bb086da0 100644
+--- a/drivers/gpu/drm/apple/iomfb_v14_7.c
++++ b/drivers/gpu/drm/apple/iomfb_v14_7.c
+@@ -2094,8 +2094,8 @@ int iomfb_v14_7_external_prepare(struct apple_dcp *dcp)
+ 		goto refuse;
+ 	}
+ 	/* The callbacks here are those of one firmware image. */
+-	if (of_property_read_string(dev->of_node, "apple,firmware-uuid", &uuid) ||
+-	    strcmp(uuid, DCP_V14_FIRMWARE_UUID)) {
++	if (!dcp_ext_firmware_admitted(dev->of_node)) {
++		of_property_read_string(dev->of_node, "apple,firmware-uuid", &uuid);
+ 		dev_err(dev, "external display processor firmware %s is not supported\n",
+ 			uuid ?: "(unknown)");
+ 		ret = -ENODEV;
+@@ -2188,20 +2188,13 @@ static int dcpext_check_power(struct apple_dcp *dcp)
+ 	struct device *dev = dcp->dev;
+ 	struct device_node *ps, *entry;
+ 	struct regmap *map;
+-	const char *label;
+ 	u32 offset, value;
+ 	int ret;
+ 
+-	ps = of_parse_phandle(dev->of_node, "power-domains", 0);
+-	if (!ps)
+-		return -ENODEV;
+ 	/* The CPU domain of this pipe: dispext<N>_cpu. */
+-	ret = of_property_read_string(ps, "label", &label);
+-	if (ret || !strstarts(label, "dispext") || strlen(label) < 4 ||
+-	    strcmp(label + strlen(label) - 4, "_cpu")) {
+-		of_node_put(ps);
++	ps = dcp_ext_cpu_domain(dev->of_node);
++	if (!ps)
+ 		return -EINVAL;
+-	}
+ 	ret = of_property_read_u32(ps, "reg", &offset);
+ 	map = syscon_node_to_regmap(ps->parent);
+ 	of_node_put(ps);
+diff --git a/drivers/mux/apple-display-crossbar.c b/drivers/mux/apple-display-crossbar.c
+index a02b8d9fe..a3c5f3eae 100644
+--- a/drivers/mux/apple-display-crossbar.c
++++ b/drivers/mux/apple-display-crossbar.c
+@@ -1003,7 +1003,7 @@ static int apple_dpxbar_probe(struct platform_device *pdev)
+ 	spin_lock_init(&dpxbar->lock);
+ 
+ 	dpxbar->dev = dev;
+-	dpxbar->t6030_dpin = of_machine_is_compatible("apple,t6030");
++	dpxbar->t6030_dpin = apple_dp_tunnel_m3_soc();
+ 	dpxbar->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dpxbar->regs))
+ 		return PTR_ERR(dpxbar->regs);
+diff --git a/drivers/phy/apple/atc.c b/drivers/phy/apple/atc.c
+index 4ce4ad506..4735e9f4b 100644
+--- a/drivers/phy/apple/atc.c
++++ b/drivers/phy/apple/atc.c
+@@ -3222,7 +3222,7 @@ static int atc_tunnel_set_t602x(struct apple_atcphy *atcphy, unsigned int dpin,
+ /* T6030 (M3 Pro) uses T8122-generation PHYs for both DP IN clock outputs. */
+ static bool apple_atc_tunnel_is_t6030(struct apple_atcphy *atcphy)
+ {
+-	return of_machine_is_compatible("apple,t6030") &&
++	return apple_dp_tunnel_m3_soc() &&
+ 	       atcphy->hw->gen == ATCPHY_GENERATION_T8122;
+ }
+ 
+@@ -3487,8 +3487,7 @@ static int atcphy_configure(struct apple_atcphy *atcphy, enum atcphy_mode mode)
+ 	/* Keep failed transitions retryable even when the requested mode is unchanged. */
+ 	atcphy->mode_dirty = true;
+ 	/* the mode change below may power the PHY down: stop the tunnel clock first */
+-	if (of_machine_is_compatible("apple,t6030") &&
+-	    atcphy->hw->gen == ATCPHY_GENERATION_T8122) {
++	if (apple_atc_tunnel_is_t6030(atcphy)) {
+ 		ret = atc_t8122_tunnel_stop(atcphy);
+ 		if (ret)
+ 			return ret;
+diff --git a/drivers/soc/apple/t6030-display-gate.c b/drivers/soc/apple/t6030-display-gate.c
+index 07ba8b9f6..0d41c0f25 100644
+--- a/drivers/soc/apple/t6030-display-gate.c
++++ b/drivers/soc/apple/t6030-display-gate.c
+@@ -250,6 +250,7 @@ struct gate_soc {
+ 	const char *fw_uuids;		/* /chosen strings naming each firmware image */
+ 	bool quiet_without_nodes;	/* no display nodes in the device tree is normal */
+ 	bool dcpext;			/* the external display processors and their DARTs */
++	bool ext_fe_first;		/* dcpext -> dispextN_fe -> _cpu -> _sys (T6031/T6034) */
+ };
+ 
+ static const struct gate_soc gate_t6030 __initconst = {
+@@ -359,6 +360,9 @@ static const struct gate_soc gate_t6034 __initconst = {
+ 	.pmp_ps_any_pmgr = true,
+ 	.describe = true,
+ 	.fw_uuids = "asahi,t6034-fw-uuids",
++	/* External nodes remain off unless m1n1 publishes both opt-in handoffs. */
++	.dcpext = true,
++	.ext_fe_first = true,
+ };
+ 
+ static bool gate_j516m_requested __initdata;
+@@ -1413,15 +1417,32 @@ static int __init gate_ext_resolve(struct gate_ext *ext)
+ 		return -EINVAL;
+ 
+ 	/* Do not enable a CPU whose power ownership is not fully described. */
+-	ext->cpu = gate_ps_parent(ext->dcp);
+-	if (!gate_ps_dispext(ext->cpu, "cpu", &ext->index))
+-		return -EINVAL;
+-	ext->fe = gate_ps_parent(ext->cpu);
+-	if (!gate_ps_dispext(ext->fe, "fe", &ext->index))
+-		return -EINVAL;
+-	ext->sys = gate_ps_parent(ext->fe);
+-	if (!gate_ps_dispext(ext->sys, "sys", &ext->index))
+-		return -EINVAL;
++	if (gate_soc->ext_fe_first) {
++		/*
++		 * T6031/T6034: dispextN_fe is the child of dispextN_cpu, as
++		 * disp_fe is of disp_cpu, so the processor holds the front end
++		 * and with it all three states. Its DART and mailbox hold the CPU.
++		 */
++		ext->fe = gate_ps_parent(ext->dcp);
++		if (!gate_ps_dispext(ext->fe, "fe", &ext->index))
++			return -EINVAL;
++		ext->cpu = gate_ps_parent(ext->fe);
++		if (!gate_ps_dispext(ext->cpu, "cpu", &ext->index))
++			return -EINVAL;
++		ext->sys = gate_ps_parent(ext->cpu);
++		if (!gate_ps_dispext(ext->sys, "sys", &ext->index))
++			return -EINVAL;
++	} else {
++		ext->cpu = gate_ps_parent(ext->dcp);
++		if (!gate_ps_dispext(ext->cpu, "cpu", &ext->index))
++			return -EINVAL;
++		ext->fe = gate_ps_parent(ext->cpu);
++		if (!gate_ps_dispext(ext->fe, "fe", &ext->index))
++			return -EINVAL;
++		ext->sys = gate_ps_parent(ext->fe);
++		if (!gate_ps_dispext(ext->sys, "sys", &ext->index))
++			return -EINVAL;
++	}
+ 	for (i = 0; i < 2; i++) {
+ 		domain = gate_ps_parent(i ? ext->mbox : ext->dart);
+ 		of_node_put(domain);
+diff --git a/drivers/thunderbolt/apple.c b/drivers/thunderbolt/apple.c
+index c6625c5cb..d181aaf88 100644
+--- a/drivers/thunderbolt/apple.c
++++ b/drivers/thunderbolt/apple.c
+@@ -151,6 +151,15 @@ static const struct apple_cio_hw apple_cio_t6030_hw = {
+ 	.dp = &apple_dpin_m3,
+ };
+ 
++/*
++ * T6031/T6034 (M3 Max): the ACIO bring-up stays the t8103 one it has used so
++ * far (the link already works with it); only the DP IN policy is the M3 one.
++ * DP tunnels still need the root to be on apple_dpin_qualified_soc.
++ */
++static const struct apple_cio_hw apple_cio_t6031_hw = {
++	.dp = &apple_dpin_m3,
++};
++
+ /* Type 7 uses its existing ready-state check and has no qualified DP route. */
+ static const struct apple_cio_hw apple_cio_t8142_hw = {
+ 	.dp = &apple_dpin_disabled,
+@@ -376,6 +385,8 @@ static const struct of_device_id apple_dpin_qualified_soc[] = {
+ 	{ .compatible = "apple,t6020" },
+ 	{ .compatible = "apple,t6021" },
+ 	{ .compatible = "apple,t6030" },
++	/* T6034: T8122-generation ATC PHYs and the M3 DP IN flow, as on T6030. */
++	{ .compatible = "apple,t6034" },
+ 	{},
+ };
+ 
+@@ -3335,6 +3346,10 @@ static const struct of_device_id apple_acio_match[] = {
+ 		.compatible = "apple,t6030-usb4-acio",
+ 		.data = &apple_cio_t6030_hw,
+ 	},
++	{
++		.compatible = "apple,t6031-usb4-acio",
++		.data = &apple_cio_t6031_hw,
++	},
+ 	{
+ 		.compatible = "apple,t6020-usb4-acio",
+ 		.data = &apple_cio_t6020_hw,
+diff --git a/include/linux/soc/apple/dp-tunnel.h b/include/linux/soc/apple/dp-tunnel.h
+index 540d48fe8..1f1c4903e 100644
+--- a/include/linux/soc/apple/dp-tunnel.h
++++ b/include/linux/soc/apple/dp-tunnel.h
+@@ -180,6 +180,17 @@ static inline bool apple_dp_tunnel_route_wired(struct device_node *route,
+  * T6030 old trees may omit DPIN names on their three-output T602X crossbar.
+  * Consumers qualify their SoC flow separately and never select these muxes.
+  */
++/*
++ * SoCs whose DP IN tunnels run the T6030 (M3) flow: T8122-generation ATC PHYs
++ * clocking both DP IN outputs, and a crossbar that routes every output itself.
++ * T6034 has the same ATC generation.
++ */
++static inline bool apple_dp_tunnel_m3_soc(void)
++{
++	return of_machine_is_compatible("apple,t6030") ||
++	       of_machine_is_compatible("apple,t6034");
++}
++
+ static inline bool apple_dp_tunnel_dual_stream(struct device_node *connector_np)
+ {
+ 	struct device_node *port __free(device_node) = NULL;
+diff --git a/tools/asahi/t6030-clock-tests.py b/tools/asahi/t6030-clock-tests.py
+index 0b75c3ade..459006c1a 100644
+--- a/tools/asahi/t6030-clock-tests.py
++++ b/tools/asahi/t6030-clock-tests.py
+@@ -10,7 +10,7 @@ import resource
+ import subprocess
+ ROOT = Path(__file__).resolve().parents[2]
+ FUNCTIONS = {
+-    'include/linux/soc/apple/dp-tunnel.h': ['apple_dp_tunnel_t6030_pclk'],
++    'include/linux/soc/apple/dp-tunnel.h': ['apple_dp_tunnel_t6030_pclk', 'apple_dp_tunnel_m3_soc'],
+     'drivers/gpu/drm/apple/dcp-fabric-core.h': ['dcp_fabric_t6030_pclk'],
+     'drivers/gpu/drm/apple/dcp-fabric-session.h': ['dcp_fabric_callback_valid'],
+     'drivers/phy/apple/atc.c': [
+diff --git a/tools/asahi/tunnel-route-tests.py b/tools/asahi/tunnel-route-tests.py
+index 5be05c91c..4bf11b24f 100644
+--- a/tools/asahi/tunnel-route-tests.py
++++ b/tools/asahi/tunnel-route-tests.py
+@@ -11,7 +11,7 @@ import tempfile
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+ FUNCTIONS = {
+-    'include/linux/soc/apple/dp-tunnel.h': ['apple_dp_tunnel_t6030_pclk'],
++    'include/linux/soc/apple/dp-tunnel.h': ['apple_dp_tunnel_t6030_pclk', 'apple_dp_tunnel_m3_soc'],
+     'drivers/gpu/drm/apple/dcp-fabric-core.c': ['dcp_fabric_tunnel_clock_blocked'],
+     'drivers/gpu/drm/apple/dcp-fabric.c': [
+         'dcp_fabric_snapshot_port', 'dcp_typec_tunnel_ctl'],
+@@ -19,7 +19,7 @@ FUNCTIONS = {
+ 
+ 
+ def function(source, name):
+-    match = re.search(r'^(?:static\s+)?(?:inline\s+)?(?:int|void|u8|struct mux_control \*)\s*' +
++    match = re.search(r'^(?:static\s+)?(?:inline\s+)?(?:int|void|u8|bool|struct mux_control \*)\s*' +
+                       name + r'\([^;]*?\)\n\{', source, re.M | re.S)
+     if not match:
+         raise ValueError(name)
+diff --git a/tools/asahi/tunnel-route/fixture.c b/tools/asahi/tunnel-route/fixture.c
+index dd63853c3..ef5058a34 100644
+--- a/tools/asahi/tunnel-route/fixture.c
++++ b/tools/asahi/tunnel-route/fixture.c
+@@ -55,6 +55,9 @@ struct apple_dcp_typec_port {
+ static bool t6030;
+ static bool of_machine_is_compatible(const char *compatible)
+ {
++	/* apple_dp_tunnel_m3_soc() also asks for T6034, which no scenario here models. */
++	if (!strcmp(compatible, "apple,t6034"))
++		return false;
+ 	assert(!strcmp(compatible, "apple,t6030"));
+ 	return t6030;
+ }
