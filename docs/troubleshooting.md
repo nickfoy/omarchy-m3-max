@@ -20,3 +20,7 @@ hyprctl eval 'hl.monitor({ output = "DP-3", mode = "3840x1080@60", position = "a
 `DP-3` is an example, not a universal connector. Re-enabling recovered one incident; this is not a root-cause fix or automatic service. Do not apply 120 Hz just because it appears in EDID. Preserve the manual SUPER+ALT+W display-wake binding; its exact current Lua command is in the example configuration.
 
 For kernel evidence inspect relevant `asahi-g15`, `apple-dcp`, DART and Thunderbolt messages locally. Remove MAC/IP addresses, serials, UUIDs, account paths, SSIDs and unrelated personal logs before sharing even a short excerpt. The inventory tool uses an allowlist rather than pretending broad regex redaction makes arbitrary logs safe.
+
+## Brightness keys appear ineffective
+
+On the [panel candidate](j514m-candidates.md), both the MacBook keyboard and external keyboard control the internal panel when it is focused. Move the pointer onto the MacBook screen and retry. Omarchy targets the focused display; the current dock connection exposes no connector DDC brightness interface for the external monitor. Use its physical menu. A backlight device alone is not proof of visible dimming; verify the panel with the owner.

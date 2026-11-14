@@ -1,6 +1,6 @@
 # Compatibility
 
-Verified machine: **Apple MacBook Pro Mac15,10 / J514M / T6034**, 14-inch M3 Max, 14 CPU / 30 GPU cores, 36 GB nominal RAM. All results refer to the exact [known-good package/firmware manifest](manifests/known-good.json), not every M3 Max or any arbitrary Aurora release.
+Verified machine: **Apple MacBook Pro Mac15,10 / J514M / T6034**, 14-inch M3 Max, 14 CPU / 30 GPU cores, 36 GB nominal RAM. Unless a candidate is explicitly identified, results refer to the exact [known-good package/firmware manifest](manifests/known-good.json), not every M3 Max or any arbitrary Aurora release.
 
 | Feature | Status | Evidence / limitation |
 | --- | --- | --- |
@@ -9,7 +9,7 @@ Verified machine: **Apple MacBook Pro Mac15,10 / J514M / T6034**, 14-inch M3 Max
 | GPU acceleration | Experimental; verified working | Apple M3 Max EGL renderer and bound render node |
 | Internal display | Verified working | 3024×1964, scale 2 |
 | Internal high refresh | Verified working | Selected 120 Hz |
-| Display brightness | Not working | No sysfs backlight device in current baseline |
+| Display brightness | Verified working on panel candidate | Kernel `7.2.11-16-1.2-ARCH`, `apple-panel-bl` max 500; owner confirmed built-in and external keyboard with internal screen focused. Original baseline lacks this fix; see [candidate manifest](manifests/panel-candidate.json). |
 | USB-C / Thunderbolt external display | Experimental; partially working | Samsung C49J89x 3840×1080 ~60 Hz via Surface TB4 Dock; startup works, later disabled-output incident |
 | HDMI external display | Not tested | No direct-HDMI claim |
 | Multiple external displays | Not tested | One external plus internal verified |

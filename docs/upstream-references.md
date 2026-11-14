@@ -10,3 +10,7 @@
 - [Native Mesa source](https://github.com/omacom/mesa), baseline package version `1:26.3.0_devel.20261107.231485.b7b03c5b3b8-1`; this bundle does not rebuild Mesa or claim the abbreviated package revision is a verified full source pin.
 
 References record evidence inspected during baseline preparation; later upstream changes are not automatically incorporated. The lock file provides immutable recipe URLs and checksums. Plain diffs deliberately omit patch email envelopes; upstream source copyright, license and attribution notices remain intact.
+
+- [J514M panel brightness and timestamps, Scott Jones’s PR #457](https://github.com/omacom/linux-aurora/pull/457); exact candidate commits and patch checksum are recorded separately from the original baseline.
+
+See the [attribution and licensing map](../THIRD_PARTY_NOTICES.md) for imported artifacts, local adaptations and redistribution boundaries.

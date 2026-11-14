@@ -3,7 +3,7 @@
 - Scope: one Mac15,10/J514M/T6034, 14 CPU/30 GPU cores and 36 GB nominal memory. No blanket M3 Max support claim.
 - Native graphics/display components remain experimental; upstream success on other boards does not qualify this board's power/thermal behavior.
 - Suspend previously returned to a black internal display while networking/kernel resumed. It has **not** been retested with the new graphics stack. Sleep/hibernate targets remain masked and lid-triggered suspend ignored. No test or setting change was performed during this mission.
-- No `/sys/class/backlight` device on the current stack. Internal brightness is not working through that interface; panel nits work discussed upstream is not included automatically.
+- The original known-good baseline lacks panel brightness. The installed panel candidate exposes `apple-panel-bl`; the owner verified visible dimming using both keyboards when the internal display is focused. Omarchy targets the focused screen; the external dock connection exposes no connector DDC brightness control. Actual 120 fps presentation remains unmeasured. See [candidate results](j514m-candidates.md).
 - External cold/startup and clamshell close/open worked. Hotplug is partially working: a later disabled-output incident required explicit compositor enable. Initial cause remains unresolved.
 - Direct HDMI, multiple external monitors, external 120 Hz, HDR, display audio and other docks remain unqualified. DisplayLink support is not claimed.
 - Webcam, Bluetooth, battery runtime, thermal/power envelope and sustained GPU compute are not qualified by this mission. Owner-reported audio/network success is distinguished from automated graphics checks.

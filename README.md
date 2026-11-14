@@ -12,7 +12,7 @@ The current configuration is experimental. The [versioned baseline](manifests/kn
 - Internal/external simultaneous operation; clamshell close/open with external keyboard and mouse.
 - Owner-confirmed Wi-Fi, keyboard, trackpad, speakers/audio, Tailscale and SSH.
 
-**Limits:** brightness has no backlight interface; suspend/resume is unqualified and deliberately disabled; HDMI and multiple external displays are untested. One later reconnect left the external output disabled until explicitly re-enabled: hotplug is **partially working**, not fully qualified. External 120 Hz was advertised but never applied or tested. See [limitations](docs/known-limitations.md).
+**Limits:** the original baseline lacks brightness support; the installed [panel candidate](docs/j514m-candidates.md) now has owner-verified brightness from both keyboards when the internal screen is focused; suspend/resume is unqualified and deliberately disabled; HDMI and multiple external displays are untested. One later reconnect left the external output disabled until explicitly re-enabled: hotplug is **partially working**, not fully qualified. External 120 Hz was advertised but never applied or tested. See [limitations](docs/known-limitations.md).
 
 ## Start with verification
 
@@ -60,4 +60,6 @@ Original scripts/docs are MIT; upstream work retains its own licenses. Credit an
 
 ## J514M fixes under evaluation
 
-[Panel brightness and actual 120 fps presentation](docs/j514m-candidates.md) are being evaluated on top of the preserved external-display stack. Candidate patches are not part of the known-good baseline until hardware validation and owner approval.
+[Panel brightness](docs/j514m-candidates.md) is verified on the installed candidate with both the built-in and external keyboard when the MacBook screen is focused. Actual 120 fps presentation remains unmeasured on this machine. Candidate patches are not part of the known-good baseline until hardware validation and owner approval.
+
+Upstream driver and bootloader work is credited in the [artifact-by-artifact attribution map](THIRD_PARTY_NOTICES.md#attribution-and-provenance-map), including BTNG-studio’s external-display patches and Scott Jones’s J514M panel fix. This community repository preserves and adapts that work; it is not an official Omarchy, Aurora or Asahi distribution.

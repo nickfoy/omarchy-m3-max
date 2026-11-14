@@ -1,5 +1,5 @@
 {
-  "status": "booted-partial-runtime-validation",
+  "status": "brightness-owner-verified-presentation-unmeasured",
   "upstream_pr": "https://github.com/omacom/linux-aurora/pull/457",
   "upstream_commits": [
     "0c6c113ac69cad1d233d7c8a0b545f1b699bbaea",
@@ -48,9 +48,11 @@
     "lid_closed": true,
     "backlight_device": "apple-panel-bl",
     "backlight_max": 500,
-    "visible_dimming": "not yet tested",
-    "brightness_keys": "not yet tested",
+    "visible_dimming": "PASS: owner confirmed on internal panel",
+    "brightness_keys": "PASS: owner confirmed built-in and external keyboard, internal screen focused",
     "internal_presentation_fps": "not yet measured",
-    "sleep_targets": "all five masked"
+    "sleep_targets": "all five masked",
+    "focused_monitor_behavior": "Keys target focused monitor; dock external has no connector DDC interface",
+    "lid_closed_note": "Initial automated boot check only; owner subsequently opened lid for brightness validation"
   }
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-14 — owner-verified panel brightness
+
+- Confirmed visible panel brightness control from the built-in and external keyboard when the internal screen is focused, on candidate kernel `7.2.11-16-1.2-ARCH`.
+- Documented focused-screen routing and the dock external monitor’s missing DDC brightness interface. Actual presentation frame rate remains unmeasured; no baseline promotion.
+
 ## 2026-11-14 — candidate panel fix
 
 - Preserved Aurora PR #457 as a separate optional patch with pinned upstream commits and checksum.

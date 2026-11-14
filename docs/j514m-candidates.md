@@ -22,7 +22,7 @@ Focused tests: `tools/asahi/t6034-display-tests.py`, `dcp14-panel-tests.py`, `dc
 
 After an approved reboot, open the lid, check `uname -r`, run both repository GPU/display verifiers, and inspect `/sys/class/backlight`. If `apple-panel-bl` appears, record its maximum/current value, make a modest brightness change with `brightnessctl -d apple-panel-bl set 70%`, then restore the original value. Confirm visible panel dimming and keyboard controls with the owner. Measure presentation intervals on the internal panel rather than equating its mode with frame throughput. Check the external monitor and preserve all sleep masks/lid policy. No suspend test is included, despite the optional suspend suggestion upstream.
 
-The owner-approved kernel/headers candidate is now installed. Package hooks regenerated the initramfs, unified kernel image and m1n1 bundle while retaining the external-display opt-in. The next-boot check passed, and all five sleep targets remained masked. Runtime tests still exercised the previous kernel; brightness and presentation are awaiting reboot validation. The baseline has not been promoted.
+The owner-approved kernel/headers candidate is now installed. Package hooks regenerated the initramfs, unified kernel image and m1n1 bundle while retaining the external-display opt-in. The next-boot check passed, and all five sleep targets remained masked. At installation time runtime tests still exercised the previous kernel; subsequent boot and owner validation are recorded below. The baseline has not been promoted.
 
 ## Other community findings
 
@@ -38,4 +38,8 @@ Review date: 2026-11-14. Upstream status can change. Previously merged GPU/kerne
 
 ## First candidate boot
 
-The candidate booted as `7.2.11-16-1.2-ARCH`. GPU verification passed with the Apple M3 Max renderer, and the external ultrawide ran at 3840x1080@59.968. The new `apple-panel-bl` backlight device exposes a maximum of 500. All five sleep targets remain masked. The lid was closed during this check: visible internal-panel dimming, brightness keys and actual presentation frame rate remain unverified. No baseline promotion has occurred.
+The candidate booted as `7.2.11-16-1.2-ARCH`. GPU verification passed with the Apple M3 Max renderer, and the external ultrawide ran at 3840x1080@59.968. The new `apple-panel-bl` backlight device exposes a maximum of 500. All five sleep targets remain masked. The lid was closed during this initial automated check. The owner subsequently opened it and confirmed visible brightness adjustment from both the built-in and external keyboard when the internal display was focused. Actual presentation frame rate remains unmeasured. No baseline promotion has occurred.
+
+## Focused-screen brightness behavior
+
+Omarchy routes brightness keys to the focused display. Both keyboards control the MacBook panel when it is focused; move the pointer onto that screen before testing. With the external screen focused, the same keys cannot control this monitor through the current dock: no DRM connector DDC interface is exposed, and the focused-monitor brightness command returns failure. Use the external monitor’s own menu. Direct internal-panel command/readback also succeeded; its original setting was restored during diagnosis. No key-binding override was needed.
