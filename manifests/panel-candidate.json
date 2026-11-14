@@ -62,6 +62,20 @@
       "controls": "Existing Omarchy Ctrl + display-brightness up/down bindings",
       "additional_patch": false,
       "reboot_persistence": "not tested"
+    },
+    "built_in_webcam": {
+      "driver_module": "apple_isp",
+      "device_name": "apple-isp",
+      "format": "NV12",
+      "width": 1920,
+      "height": 1080,
+      "frames_streamed": 60,
+      "observed_fps": 29.95,
+      "capture": "PASS",
+      "live_preview": "PASS: owner confirmed",
+      "media_saved": false,
+      "browser_conferencing": "not tested",
+      "additional_patch": false
     }
   }
 }

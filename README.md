@@ -65,3 +65,5 @@ Original scripts/docs are MIT; upstream work retains its own licenses. Credit an
 Upstream driver and bootloader work is credited in the [artifact-by-artifact attribution map](THIRD_PARTY_NOTICES.md#attribution-and-provenance-map), including BTNG-studio’s external-display patches and Scott Jones’s J514M panel fix. This community repository preserves and adapts that work; it is not an official Omarchy, Aurora or Asahi distribution.
 
 Built-in keyboard illumination is verified using Omarchy’s existing **Ctrl + display-brightness up/down** shortcuts; see [keyboard-backlight troubleshooting](docs/troubleshooting.md#macbook-keyboard-backlight). No additional patch is needed.
+
+The built-in webcam is verified at **1920×1080, approximately 30 fps**, including an owner-confirmed live preview; see [camera verification](docs/troubleshooting.md#built-in-webcam). Browser/video-call integration remains untested.

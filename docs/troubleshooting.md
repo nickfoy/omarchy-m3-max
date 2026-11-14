@@ -41,3 +41,27 @@ omarchy brightness keyboard down
 ```
 
 Automatic ambient-light adjustment, idle/lock restoration and persistence across reboot were not qualified by this test. Upstream implementations are `bin/omarchy-brightness-keyboard` and `default/hypr/bindings/media.lua` in [Omarchy](https://github.com/omacom/omarchy); this repository documents the installed behavior rather than copying their implementation.
+
+## Built-in webcam
+
+Verified on Mac15,10/J514M with kernel `7.2.11-16-1.2-ARCH`: the `apple_isp` module exposes an `apple-isp` capture device. A 60-frame NV12 stream at 1920×1080 completed at approximately 29.95 fps, and the owner confirmed the live preview looked correct. No driver changes were needed. Frames were discarded; no camera images or video were saved or published.
+
+Identify the camera by name, not a permanent video-node number:
+
+```sh
+for device in /sys/class/video4linux/*; do
+  printf '%s: ' "$device"
+  cat "$device/name"
+done
+```
+
+In this test the built-in camera was `/dev/video1`; `/dev/video0` was the hardware video decoder, and other nodes belonged to an attached Logitech BRIO. Recheck before using these example commands:
+
+```sh
+# Brief capture to discard, with a timeout:
+timeout 15s v4l2-ctl -d /dev/video1 --stream-mmap=4 --stream-count=60 --stream-to=/dev/null
+# Optional visible preview; opens the camera for up to 25 seconds:
+timeout 30s ffplay -hide_banner -loglevel error -f v4l2 -input_format nv12 -video_size 1920x1080 -framerate 30 -window_title 'MacBook built-in camera test' -autoexit -t 25 /dev/video1
+```
+
+Open the lid before testing. Browser permissions, PipeWire/portal integration, conferencing apps and the external BRIO were not qualified. The installed GStreamer setup lacked `v4l2src`; FFplay provided the successful preview without installing packages. Camera support comes from the upstream Aurora/Asahi stack credited in [third-party notices](../THIRD_PARTY_NOTICES.md).

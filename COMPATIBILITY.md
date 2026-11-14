@@ -20,7 +20,7 @@ Verified machine: **Apple MacBook Pro Mac15,10 / J514M / T6034**, 14-inch M3 Max
 | Trackpad / keyboard | Verified working | Owner-confirmed daily use |
 | Built-in keyboard backlight | Verified working | `white:kbd_backlight`, range 0–255; command set 0 → 25 (10%), owner confirmed illumination. Existing Omarchy Ctrl + display-brightness keys; no patch added. Tested on kernel `7.2.11-16-1.2-ARCH`. |
 | External keyboard / mouse | Verified working | Through dock, including clamshell |
-| Webcam | Not tested | No capture performed during this mission |
+| Built-in webcam | Verified working | `apple-isp`: 1920×1080 NV12, 60-frame stream at ~29.95 fps; owner confirmed live preview on kernel `7.2.11-16-1.2-ARCH`. Browser/video-call integration not tested. |
 | Suspend / resume | Not working previously; current stack not tested | Earlier black-screen failure; deliberately disabled |
 | Battery / power management | Partially working | Usable desktop/charging; no battery-runtime, thermal or power qualification |
 | Tailscale / SSH | Verified working, owner report | No credentials/network topology published; recovery connectivity must be rechecked before a change |

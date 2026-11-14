@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-14 — built-in webcam verification
+
+- Verified 1080p/~30 fps Apple ISP capture and owner-confirmed live preview with existing drivers; no camera media retained. Browser/conferencing integration remains untested.
+
 ## 2026-11-14 — keyboard backlight verification
 
 - Owner confirmed MacBook keyboard illumination after raising the existing LED device from zero to 10%; documented existing Ctrl + display-brightness shortcuts. No patch or binding change.
