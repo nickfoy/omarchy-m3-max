@@ -22,6 +22,8 @@ Focused tests: `tools/asahi/t6034-display-tests.py`, `dcp14-panel-tests.py`, `dc
 
 After an approved reboot, open the lid, check `uname -r`, run both repository GPU/display verifiers, and inspect `/sys/class/backlight`. If `apple-panel-bl` appears, record its maximum/current value, make a modest brightness change with `brightnessctl -d apple-panel-bl set 70%`, then restore the original value. Confirm visible panel dimming and keyboard controls with the owner. Measure presentation intervals on the internal panel rather than equating its mode with frame throughput. Check the external monitor and preserve all sleep masks/lid policy. No suspend test is included, despite the optional suspend suggestion upstream.
 
+The owner-approved kernel/headers candidate is now installed. Package hooks regenerated the initramfs, unified kernel image and m1n1 bundle while retaining the external-display opt-in. The next-boot check passed, and all five sleep targets remained masked. Runtime tests still exercised the previous kernel; brightness and presentation are awaiting reboot validation. The baseline has not been promoted.
+
 ## Other community findings
 
 | Candidate | Evidence and relevance | Decision |

@@ -1,5 +1,5 @@
 {
-  "status": "candidate-not-runtime-verified",
+  "status": "installed-awaiting-reboot-validation",
   "upstream_pr": "https://github.com/omacom/linux-aurora/pull/457",
   "upstream_commits": [
     "0c6c113ac69cad1d233d7c8a0b545f1b699bbaea",
@@ -30,5 +30,14 @@
       "sha256": "848e542ec8f88bb41a5c29c005627b7882a31a783a0e10ce0fb81ddd5aa59790",
       "publicly_distributed": false
     }
+  },
+  "installation": {
+    "result": "PASS",
+    "next_boot_check": "PASS",
+    "boot_artifacts_regenerated": true,
+    "external_display_opt_in_preserved": true,
+    "sleep_targets_remain_masked": true,
+    "running_kernel_before_reboot": "7.2.11-16-1.1-ARCH",
+    "baseline_promoted": false
   }
 }
