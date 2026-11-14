@@ -53,6 +53,15 @@
     "internal_presentation_fps": "not yet measured",
     "sleep_targets": "all five masked",
     "focused_monitor_behavior": "Keys target focused monitor; dock external has no connector DDC interface",
-    "lid_closed_note": "Initial automated boot check only; owner subsequently opened lid for brightness validation"
+    "lid_closed_note": "Initial automated boot check only; owner subsequently opened lid for brightness validation",
+    "keyboard_backlight": {
+      "device": "white:kbd_backlight",
+      "max": 255,
+      "tested_level": 25,
+      "visible_illumination": "PASS: owner confirmed",
+      "controls": "Existing Omarchy Ctrl + display-brightness up/down bindings",
+      "additional_patch": false,
+      "reboot_persistence": "not tested"
+    }
   }
 }

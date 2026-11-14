@@ -63,3 +63,5 @@ Original scripts/docs are MIT; upstream work retains its own licenses. Credit an
 [Panel brightness](docs/j514m-candidates.md) is verified on the installed candidate with both the built-in and external keyboard when the MacBook screen is focused. Actual 120 fps presentation remains unmeasured on this machine. Candidate patches are not part of the known-good baseline until hardware validation and owner approval.
 
 Upstream driver and bootloader work is credited in the [artifact-by-artifact attribution map](THIRD_PARTY_NOTICES.md#attribution-and-provenance-map), including BTNG-studio’s external-display patches and Scott Jones’s J514M panel fix. This community repository preserves and adapts that work; it is not an official Omarchy, Aurora or Asahi distribution.
+
+Built-in keyboard illumination is verified using Omarchy’s existing **Ctrl + display-brightness up/down** shortcuts; see [keyboard-backlight troubleshooting](docs/troubleshooting.md#macbook-keyboard-backlight). No additional patch is needed.

@@ -24,3 +24,20 @@ For kernel evidence inspect relevant `asahi-g15`, `apple-dcp`, DART and Thunderb
 ## Brightness keys appear ineffective
 
 On the [panel candidate](j514m-candidates.md), both the MacBook keyboard and external keyboard control the internal panel when it is focused. Move the pointer onto the MacBook screen and retry. Omarchy targets the focused display; the current dock connection exposes no connector DDC brightness interface for the external monitor. Use its physical menu. A backlight device alone is not proof of visible dimming; verify the panel with the owner.
+
+## MacBook keyboard backlight
+
+Verified on Mac15,10 / J514M with kernel `7.2.11-16-1.2-ARCH` and Omarchy `4.5.0-3`: the built-in keyboard LED device is `white:kbd_backlight`, maximum 255. It was set to zero; the existing Omarchy command raised it to 25 (10%), and the owner confirmed visible illumination. No additional kernel patch or binding override was needed.
+
+- **Ctrl + display-brightness up:** increase keyboard illumination.
+- **Ctrl + display-brightness down:** decrease keyboard illumination.
+
+These are existing Omarchy bindings, distinct from plain display-brightness keys. They control the MacBook keyboard LEDs, not an external keyboard's own illumination. Direct checks and adjustment:
+
+```sh
+brightnessctl -d white:kbd_backlight info
+omarchy brightness keyboard up
+omarchy brightness keyboard down
+```
+
+Automatic ambient-light adjustment, idle/lock restoration and persistence across reboot were not qualified by this test. Upstream implementations are `bin/omarchy-brightness-keyboard` and `default/hypr/bindings/media.lua` in [Omarchy](https://github.com/omacom/omarchy); this repository documents the installed behavior rather than copying their implementation.

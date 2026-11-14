@@ -18,6 +18,7 @@ Verified machine: **Apple MacBook Pro Mac15,10 / J514M / T6034**, 14-inch M3 Max
 | Bluetooth | Not tested | No dedicated qualification in this mission |
 | Audio / speakers | Verified working | Owner-confirmed; dock/display audio not qualified |
 | Trackpad / keyboard | Verified working | Owner-confirmed daily use |
+| Built-in keyboard backlight | Verified working | `white:kbd_backlight`, range 0–255; command set 0 → 25 (10%), owner confirmed illumination. Existing Omarchy Ctrl + display-brightness keys; no patch added. Tested on kernel `7.2.11-16-1.2-ARCH`. |
 | External keyboard / mouse | Verified working | Through dock, including clamshell |
 | Webcam | Not tested | No capture performed during this mission |
 | Suspend / resume | Not working previously; current stack not tested | Earlier black-screen failure; deliberately disabled |
