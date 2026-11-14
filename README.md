@@ -57,3 +57,7 @@ Copy [prompts/update.md](prompts/update.md) into your agent. It preserves the in
 - [Upstream references](docs/upstream-references.md), [contributing](CONTRIBUTING.md), [security/privacy](SECURITY.md).
 
 Original scripts/docs are MIT; upstream work retains its own licenses. Credit and redistribution boundaries are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). No firmware, binary packages, credentials or private recovery images are published.
+
+## J514M fixes under evaluation
+
+[Panel brightness and actual 120 fps presentation](docs/j514m-candidates.md) are being evaluated on top of the preserved external-display stack. Candidate patches are not part of the known-good baseline until hardware validation and owner approval.

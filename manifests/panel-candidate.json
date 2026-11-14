@@ -1,0 +1,34 @@
+{
+  "status": "candidate-not-runtime-verified",
+  "upstream_pr": "https://github.com/omacom/linux-aurora/pull/457",
+  "upstream_commits": [
+    "0c6c113ac69cad1d233d7c8a0b545f1b699bbaea",
+    "cbe32f37b285ecc0639a4dccc440ec325b55664b"
+  ],
+  "base": "existing known-good kernel plus external-display backport",
+  "candidate_package_version": "7.2.11.aurora16-1.2",
+  "candidate_kernel_release": "7.2.11-16-1.2-ARCH",
+  "patch": "patches/linux-aurora-j514m-panel.patch",
+  "patch_sha256": "e4e94d59a992c0b27a6ee503e3f414c2ff8c7015c3671af6c62f8734fa4e0fbb",
+  "baseline_promoted": false,
+  "build": {
+    "result": "PASS",
+    "method": "incremental native makepkg --noextract --force, eight jobs",
+    "local_source_commit": "12410be11bcea15654280bb9d6500a6583c087e6",
+    "effective_config_matches_running_baseline": true,
+    "j514m_dtb_matches_running_baseline": true,
+    "host_test_suites_passed": 6,
+    "kunit_executed": false,
+    "runtime_verified": false
+  },
+  "artifacts": {
+    "linux-aurora-7.2.11.aurora16-1.2-aarch64.pkg.tar.xz": {
+      "sha256": "1ec3d2ff4c07205861b81d483ef128cefa5b6aaed360217aaae7bef55040832e",
+      "publicly_distributed": false
+    },
+    "linux-aurora-headers-7.2.11.aurora16-1.2-aarch64.pkg.tar.xz": {
+      "sha256": "848e542ec8f88bb41a5c29c005627b7882a31a783a0e10ce0fb81ddd5aa59790",
+      "publicly_distributed": false
+    }
+  }
+}

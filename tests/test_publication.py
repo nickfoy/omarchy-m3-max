@@ -13,6 +13,13 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('private-or-binary-artifact',audit.findings('backups/boot.tar.gz',b'x'))
     def test_generic_reference_is_allowed(self):
         self.assertEqual([],audit.findings('docs/example.md',b'Mac15,10; see manifests/known-good.json and https://github.com/nickfoy/omarchy-m3-max'))
+    def test_candidate_allows_only_public_firmware_fixtures(self):
+        known=('F493F03E'+'-CC40-3D89-9A08-5F259BA2B246').encode()
+        unknown=('12345678'+'-1234-1234-1234-123456789abc').encode()
+        path='patches/linux-aurora-j514m-panel.patch'
+        self.assertEqual([],audit.findings(path,known))
+        self.assertIn('uuid',audit.findings(path,unknown))
+        self.assertIn('uuid',audit.findings('notes.md',known))
     def test_agent_workflows_have_distinct_gates(self):
         install=(ROOT/'prompts/install.md').read_text();update=(ROOT/'prompts/update.md').read_text()
         for text in [install,update]:

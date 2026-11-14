@@ -35,6 +35,10 @@ def findings(path,data):
         matches=pattern.findall(text)
         if name=='uuid' and path in ('patches/linux-aurora-j514m.patch','patches/m1n1-aurora-j514m.patch'):
             matches=[v for v in matches if v not in firmware_ids]
+        # PR457 retains public firmware identity fixtures as unchanged context.
+        if name=='uuid' and path=='patches/linux-aurora-j514m-panel.patch':
+            fixtures=firmware_ids | {'F493F03E'+'-CC40-3D89-9A08-5F259BA2B247'}
+            matches=[v for v in matches if v.upper() not in fixtures]
         if matches:result.append(name)
     # This manifest is generated exclusively from pacman name/version fields.
     # Dotted package versions are not network endpoints.

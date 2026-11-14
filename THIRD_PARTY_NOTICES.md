@@ -11,3 +11,5 @@ Recipe deltas are adaptations of omacom/omarchy-pkgs recipes, including the kern
 No Apple firmware, calibration, device-specific dumps, boot images, package binaries, or upstream artwork is included. Obtain device firmware through the normal upstream installation process. Author names and source links provide credit without adding personal email addresses to generated patch envelopes. Existing notices embedded in upstream source must remain intact.
 
 The firmware UUID-shaped constants retained in source patches identify public upstream firmware builds, not a host or device. They are required for the existing firmware identity checks. No per-machine hardware UUID is included.
+
+The optional J514M panel patch derives from Scott Jones’s Aurora PR #457 (linked in the candidate documentation), including its upstream tests. It retains the kernel’s applicable licenses and is not relicensed under this repository’s MIT license.
