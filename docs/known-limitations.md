@@ -12,3 +12,5 @@
 - Update preflight is reporting only; system-wide interception is not activated. All scope/solver limitations must remain visible.
 
 Future suspend validation requires separate authorization, saved work, confirmed SSH/Tailscale reachability from another device, exact rollback artifacts, boot/EFI backups and a recovery operator. Capture pre/post kernel and display state privately, change one condition at a time, and stop on failure. This is a plan, not permission to unmask or suspend.
+
+A focused [suspend source review](suspend-review.md) compares the exact J514M success report with our installed stack, documents the attached-display veto and a possible GPU power-retention gap. It does not qualify suspend or authorize testing.
